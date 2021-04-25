@@ -4,6 +4,8 @@
 [submodule "jfaudiolib"]
 	path = jfaudiolib
 	url = ../jfaudiolib.git
+	branch = amiga
 [submodule "jfbuild"]
 	path = jfbuild
 	url = ../jfbuild.git
+	branch = amiga

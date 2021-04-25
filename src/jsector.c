@@ -1087,6 +1087,7 @@ JAnalyzeSprites(SPRITEp tspr)
     if (getrendermode() == 3 && md_tilehasmodel(tspr->picnum) >= 0 && usemodels) return;
 #endif
 
+#ifndef __AMIGA__
     // Check for voxels
     //if (bVoxelsOn)
     if (gs.Voxels)
@@ -1099,17 +1100,26 @@ JAnalyzeSprites(SPRITEp tspr)
             }
         }
     else
+#endif
         {
         switch (tspr->picnum)
             {
             case 764: // Gun barrel
 
+#ifdef __AMIGA__
+                if ((tspr->cstat & 48) == 0 || (tspr->cstat & 64))
+                    {
+                    tspr->cstat |= 16;          // Make it a wall sprite
+                    tspr->cstat &= ~64;          // Remove the one sided bit
+                    }
+#else
                 if (aVoxelArray[tspr->picnum].Voxel >= 0)
                     {
                     // Turn on voxels
                     tspr->picnum = aVoxelArray[tspr->picnum].Voxel;     // Get the voxel number
                     tspr->cstat |= 48;          // Set stat to voxelize sprite
                     }
+#endif
                   break;
             }
         }

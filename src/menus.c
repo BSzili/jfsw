@@ -207,8 +207,10 @@ MenuItem screen_i[] =
     {DefButton(btn_texfilter, 0, "Filtering"), OPT_XS,           OPT_LINE(5), 1, m_defshade, 0, NULL, MNU_TexFilterCheck, NULL},
 #endif
     {DefButton(btn_videofs, 0, "Fullscreen"), OPT_XS,            OPT_LINE(6), 1, m_defshade, 0, NULL, NULL, NULL},
+#ifndef __AMIGA__
     {DefSlider(sldr_videobpp, 0, "Colour"), OPT_XS,              OPT_LINE(7), 1, m_defshade, 0, NULL, NULL, NULL},
     {DefInert(0, NULL), OPT_XSIDE,                               OPT_LINE(7), 0, m_defshade, 0, NULL, NULL, NULL},
+#endif
     {DefSlider(sldr_videores, 0, "Resolution"), OPT_XS,          OPT_LINE(8), 1, m_defshade, 0, NULL, NULL, NULL},
     {DefInert(0, NULL), OPT_XSIDE,                               OPT_LINE(8), 0, m_defshade, 0, NULL, NULL, NULL},
     {DefOption(0, "Apply Settings"), OPT_XSIDE,                 OPT_LINE(10), 1, m_defshade, 0, MNU_ApplyVideoModeSettings, NULL, NULL},
@@ -430,7 +432,9 @@ MenuItem inputsetup_i[] =
     {DefLayer(0, "Mouse Buttons Setup", &mousesetupgroup),OPT_XS,      OPT_LINE(3),1,m_defshade,0,NULL,NULL,NULL},
     {DefLayer(0, "Mouse Axes Setup", &mouseaxesgroup),OPT_XS,          OPT_LINE(4),1,m_defshade,0,NULL,NULL,NULL},
     {DefLayer(0, "Joystick Buttons Setup", &joybuttonssetupgroup),OPT_XS,OPT_LINE(6),1,m_defshade,0,NULL,MNU_JoystickCheck,MNU_JoystickButtonsInitialise},
+#ifndef __AMIGA__
     {DefLayer(0, "Joystick Axes Setup", &joyaxessetupgroup), OPT_XS,   OPT_LINE(7),1,m_defshade,0,NULL,MNU_JoystickCheck,MNU_JoystickAxesInitialise},
+#endif
     {DefOption(0, "Apply Modern Defaults"), OPT_XS,                    OPT_LINE(9),1,m_defshade,0,MNU_LoadModernDefaults,NULL,NULL},
     {DefOption(0, "Apply Classic Defaults"), OPT_XS,                   OPT_LINE(10),1,m_defshade,0,MNU_LoadClassicDefaults,NULL,NULL},
     {DefNone}
@@ -462,7 +466,9 @@ MenuItem options_i[] =
     {DefButton(btn_auto_run, 0, "Auto Run"), OPT_XS,             OPT_LINE(7), 1, m_defshade, 0, NULL, NULL, NULL},
     {DefButton(btn_crosshair, 0, "Crosshair"), OPT_XS,           OPT_LINE(8), 1, m_defshade, 0, NULL, NULL, NULL},
     {DefButton(btn_auto_aim, 0, "Auto-Aiming"), OPT_XS,          OPT_LINE(9), 1, m_defshade, 0, NULL, NULL, NULL},
+#ifndef __AMIGA__
     {DefButton(btn_voxels, 0, "Voxel Sprites"), OPT_XS,          OPT_LINE(10), 1, m_defshade, 0, NULL, NULL, NULL},
+#endif
     {DefButton(btn_stats, 0, "Level Stats"), OPT_XS,             OPT_LINE(11), 1, m_defshade, 0, NULL, MNU_StatCheck, NULL},
     {DefNone}
     };
@@ -1348,6 +1354,19 @@ static BOOL MNU_JoystickButtonsInitialise(MenuItem_p UNUSED(mitem))
     JoystickButtonPage = 0;
     joybuttonssetupgroup.items = &joybuttons_i[JoystickButtonPage][0];
     joybuttonssetupgroup.cursor = 0;
+#ifdef __AMIGA__
+	// HACK set the actual joystick button names
+	{
+		int i, j;
+		for (i = 0; i < MAXJOYSTICKBUTTONPAGES; i++) {
+			for (j = 0; j < 20; j++) {
+				MenuItem_p item = &joybuttons_i[i][j];
+				if (item->type != mt_layer) continue;
+				item->text = getjoyname(1, item->tics);
+			}
+		}
+	}
+#endif
     return TRUE;
 }
 

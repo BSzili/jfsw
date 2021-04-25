@@ -209,7 +209,11 @@ int ScanGroups(void)
 
     if (usedgrpcache) {
         FILE *fp;
+#ifdef __AMIGA__
+        fp = fopen(GRPCACHEFILE, "w");
+#else
         fp = fopen(GRPCACHEFILE, "wt");
+#endif
         if (fp) {
             for (fg = usedgrpcache; fg; fg=fgg) {
                 fgg = fg->next;

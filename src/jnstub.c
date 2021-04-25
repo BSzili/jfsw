@@ -687,7 +687,7 @@ ExtInit(void)
         //LogUserTime(TRUE);              // Send true because user is logging
                                         // in.
 
-#if defined(DATADIR)
+#if defined(DATADIR) && !defined(__AMIGA__)
         {
             const char *datadir = DATADIR;
             if (datadir && datadir[0]) {

@@ -137,6 +137,13 @@ short Sumo_SCTable[] =
 320,321,322,323 // sumo boss
 };
 
+#ifdef __AMIGA__
+short Zilla_SCTable[] =
+{
+584,585,586,587,590,591,592,615
+};
+#endif
+
 short Bunny_SCTable[] =
 {
 424,425,426,427,428
@@ -248,13 +255,21 @@ SetupPreCache(void)
         PreCacheRange(716,720);
         // bullet splashes
         PreCacheRange(772,776);
+#ifdef __AMIGA__
+        // progress bars
+        PreCacheRange(5376,5408);
+#endif
         }
     }
 
 VOID PreCacheRipper(VOID)
     {
     PreCacheSoundList(Ripper_SCTable, SIZ(Ripper_SCTable));
+#ifdef __AMIGA__
+    PreCacheRange(1580, 1645);
+#else
     PreCacheRange(1580, 1644);
+#endif
     }
 
 VOID PreCacheRipper2(VOID)
@@ -288,6 +303,9 @@ VOID PreCacheGuardian(VOID)
     {
     PreCacheSoundList(Guardian_SCTable, SIZ(Guardian_SCTable));
     PreCacheRange(1469,1497);
+#ifdef __AMIGA__
+    PreCacheRange(1504,1518);
+#endif
     }
 
 VOID PreCacheNinja(VOID)
@@ -305,24 +323,42 @@ VOID PreCacheNinjaGirl(VOID)
 VOID PreCacheSumo(VOID)
     {
     PreCacheSoundList(Sumo_SCTable, SIZ(Sumo_SCTable));
+#ifdef __AMIGA__
+    PreCacheRange(1210, 1299);
+#else
     PreCacheRange(4490, 4544);
+#endif
     }
 
 VOID PreCacheZilla(VOID)
     {
+#ifdef __AMIGA__
+    PreCacheSoundList(Zilla_SCTable, SIZ(Zilla_SCTable));
+    PreCacheRange(5410, 5524);
+#else
     PreCacheSoundList(Sumo_SCTable, SIZ(Sumo_SCTable));
     PreCacheRange(4490, 4544);
+#endif
     }
 
 VOID PreCacheEel(VOID)
     {
+#ifdef __AMIGA__
+    PreCacheRange(3760, 3771);
+    PreCacheRange(3780, 3795);
+#else
     PreCacheRange(4430, 4479);
+#endif
     }
 
 VOID PreCacheToiletGirl(VOID)
     {
     PreCacheSoundList(Toilet_SCTable, SIZ(Toilet_SCTable));
+#ifdef __AMIGA__
+    PreCacheRange(5023, 5026);
+#else
     PreCacheRange(5023, 5027);
+#endif
     }
 
 VOID PreCacheWashGirl(VOID)
@@ -352,7 +388,11 @@ VOID PreCacheSailorGirl(VOID)
 VOID PreCachePruneGirl(VOID)
     {
     PreCacheSoundList(Toilet_SCTable, SIZ(Toilet_SCTable));
+#ifdef __AMIGA__
+    PreCacheRange(4604,4605);
+#else
     PreCacheRange(4604,4604);
+#endif
     }
 
 VOID PreCacheTrash(VOID)
@@ -440,11 +480,26 @@ VOID PreCacheAmbient(VOID)
     SPRITEp sp;
     extern AMB_INFO ambarray[];
 
+#ifdef __AMIGA__
+    if (!gs.Ambient) return;
+#endif
+
     TRAVERSE_SPRITE_STAT(headspritestat[STAT_AMBIENT], i, nexti)
         {
         sp = &sprite[i];
 
         num = sp->lotag;
+#ifdef __AMIGA__
+        // cache the range used by RandomizeAmbientSpecials
+        if (num >= 56 && num <= 67)
+		{
+			int j;
+			for (j = 56; j <= 67; j++)
+			{
+				CacheSound(ambarray[j].diginame, CACHE_SOUND_PRECACHE);
+			}
+		}
+#endif
         num = ambarray[num].diginame;
 
         CacheSound(num, CACHE_SOUND_PRECACHE);
@@ -530,11 +585,19 @@ PreCacheActor(VOID)
                 break;
 
             case SUMO_RUN_R0:
+#ifdef __AMIGA__
+                PreCacheSumo();
+#else
                 PreCacheZilla();
+#endif
                 break;
 
             case ZILLA_RUN_R0:
+#ifdef __AMIGA__
+                PreCacheZilla();
+#else
                 PreCacheSumo();
+#endif
                 break;
 
             case TOILETGIRL_R0:
@@ -639,6 +702,12 @@ void DoTheCache(void)
                 getpackets();
                 }
             }
+#ifdef __AMIGA__
+        else if (TEST(gotpic[i>>3], 1<<(i&7)))
+            {
+            walock[i] = CACHE_UNLOCK_MAX;
+            }
+#endif
         }
 
     memset(gotpic,0,sizeof(gotpic));
@@ -721,6 +790,16 @@ precache(void)
             j = sp->picnum;
 
             SET(gotpic[j>>3], 1<<(j&7));
+
+#ifdef __AMIGA__
+            if (TEST(picanm[j],TILE_ANIM_TYPE))
+                {
+                for (i = 1; i <= TEST(picanm[j],TILE_ANIM_NUM); i++)
+                    {
+                    SET(gotpic[(j+i)>>3], 1<<((j+i)&7));
+                    }
+                }
+#endif
             }
         }
     }

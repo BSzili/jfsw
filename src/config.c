@@ -216,6 +216,21 @@ void CONFIG_SetDefaults( void )
    MixRate = 44100;
    MusicParams[0] = 0;
    memcpy(&gs, &gs_defaults, sizeof(gs));
+#ifdef __AMIGA__
+   ScreenWidth = 320;
+   ScreenHeight = 200;
+   ScreenBPP = 8;
+   FXDevice = 0;
+   MusicDevice = 0;
+   NumVoices = 8;
+   NumChannels = 2;
+   NumBits = 8;
+   MixRate = 22050;
+   // make WAV the default track extension
+   char *p = strstr(gs.OggTrackName, ".ogg");
+   if(p != NULL)
+     strcpy(p, ".wav");
+#endif
 
    Bstrcpy(RTSName, DEFAULTRTSFILE);
    Bstrcpy(CommPlayerName, DEFAULTPLAYERNAME);

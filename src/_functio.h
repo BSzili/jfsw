@@ -142,7 +142,11 @@ static char * keydefaults[] =
    "Toggle_Crosshair", "I", "",
    "Next_Weapon", "'", "",
    "Previous_Weapon", ";", "",
+#ifdef __AMIGA__
+   "Show_Console", "`", "",
+#else
    "Show_Console", "NumLck", "",
+#endif
    };
 
 static char * keydefaults_modern[] =
@@ -248,6 +252,17 @@ static char * joystickdefaults[MAXJOYBUTTONS] =
    "Open",        // Y
    "",            // Back
    "",            // Guide
+#ifdef __AMIGA__
+   "Inventory_Right", // Start
+   "",            // L thumb
+   "",            // R thumb
+   "Previous_Weapon", // L shoulder
+   "Next_Weapon", // R shoulder
+   "Move_Forward", // DP up
+   "Move_Backward", // DP down
+   "Turn_Left",   // DP left
+   "Turn_Right",  // DP right
+#else
    "",            // Start
    "",            // L thumb
    "",            // R thumb
@@ -257,6 +272,7 @@ static char * joystickdefaults[MAXJOYBUTTONS] =
    "Aim_Down",    // DP down
    "Look_Left",   // DP left
    "Look_Right",  // DP right
+#endif
    "",
    "",
    "",

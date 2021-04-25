@@ -48,6 +48,9 @@ Things required to make savegames work:
 #ifdef RENDERTYPEWIN
 # include "winlayer.h"
 #endif
+#ifdef __AMIGA__
+#include <signal.h>
+#endif
 
 #include "keys.h"
 #include "names2.h"
@@ -168,7 +171,11 @@ int DispFrameRate = FALSE;
 int DispMono = TRUE;
 int Fog = FALSE;
 int FogColor;
+#ifdef __AMIGA__
+BOOL PreCaching = TRUE;
+#else
 int PreCaching = TRUE;
+#endif
 int GodMode = FALSE;
 int BotMode = FALSE;
 short Skill = 2;
@@ -834,9 +841,15 @@ void Set_GameMode(void)
         {
         buildprintf("Failure setting video mode %dx%dx%d %s! Attempting safer mode...",
                 ScreenWidth,ScreenHeight,ScreenBPP,ScreenMode?"fullscreen":"windowed");
+#ifdef __AMIGA__
+        ScreenMode = 1;
+        ScreenWidth = 320;
+        ScreenHeight = 200;
+#else
         ScreenMode = 0;
         ScreenWidth = 640;
         ScreenHeight = 480;
+#endif
         ScreenBPP = 8;
 
         result = COVERsetgamemode(ScreenMode, ScreenWidth, ScreenHeight, ScreenBPP);
@@ -3472,6 +3485,14 @@ void CommandLineHelp(CLI_ARG *args, int numargs)
     }
 
 
+#ifdef __AMIGA__
+void app_crashhandler(int signum)
+{
+    TerminateGame();
+    exit(0);
+}
+#endif
+
 int app_main(int argc, char const * const argv[])
     {
     int i;
@@ -3495,7 +3516,7 @@ int app_main(int argc, char const * const argv[])
     }
 #endif
 
-#if defined(DATADIR)
+#if defined(DATADIR) && !defined(__AMIGA__)
     {
         const char *datadir = DATADIR;
         if (datadir && datadir[0]) {
@@ -3619,6 +3640,11 @@ int app_main(int argc, char const * const argv[])
                "There was a problem initialising the Build engine: %s", engineerrstr);
        exit(1);
     }
+
+#ifdef __AMIGA__
+    signal(SIGABRT, (void (*)(int))app_crashhandler);
+    signal(SIGINT, (void (*)(int))app_crashhandler);
+#endif
 
     configloaded = CONFIG_ReadSetup();
     if (getenv("SWGRP")) {

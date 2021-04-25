@@ -1431,11 +1431,17 @@ VOID SecretInfo(PLAYERp pp)
     if (CommEnabled || CommPlayers > 1)
         return;
 
+#ifndef __AMIGA__
     x = x / (xdim/320.0);
     y = y / (ydim/200.0);
+#endif
 
     if (gs.Stats)
         {
+#ifdef __AMIGA__
+        x = x / (xdim/320.0);
+        y = y / (ydim/200.0);
+#endif
         sprintf(ds, "Kills %d/%d", Player->Kills, TotalKillable);
         DisplayMiniBarSmString(pp, x, y, PAL_XLAT_BROWN, ds);
 

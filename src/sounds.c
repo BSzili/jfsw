@@ -791,7 +791,11 @@ BOOL CacheSound(int num, int type)
             //FILE *fp;
 
             if (cachedebug)
+#ifdef __AMIGA__
+                buildprintf("Sound %s, %d\n",vp->name,num);
+#else
                 printf("Sound %s, %d\n",vp->name,num);
+#endif
 
             /*
             if (type == CACHE_SOUND_PLAY)
@@ -831,6 +835,12 @@ BOOL CacheSound(int num, int type)
             #endif
             }
         }
+#ifdef __AMIGA__
+    else if (vp->lock < CACHE_UNLOCK_MAX)
+        {
+        vp->lock = CACHE_UNLOCK_MAX;
+        }
+#endif
 
     return(TRUE);
     }

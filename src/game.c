@@ -3160,7 +3160,11 @@ VOID InitRunLevel(VOID)
         if (gs.Ambient)
             StartAmbientSound();
         SetCrosshair();
+#ifdef __AMIGA__
+        PlaySong(LevelSong, RedBookSong[PlayingLevel], TRUE, TRUE);
+#else
         PlaySong(LevelSong, -1, TRUE, TRUE);
+#endif
         SetRedrawScreen(Player + myconnectindex);
         // crappy little hack to prevent play clock from being overwritten
         // for load games
@@ -3544,6 +3548,7 @@ int app_main(int argc, char const * const argv[])
         }
     }
 
+#ifndef __AMIGA__
     // default behaviour is to write to the user profile directory, but
     // creating a 'user_profiles_disabled' file in the current working
     // directory where the game was launched makes the installation
@@ -3579,6 +3584,7 @@ int app_main(int argc, char const * const argv[])
             free(supportdir);
         }
     }
+#endif
 
     buildsetlogfile("sw.log");
 

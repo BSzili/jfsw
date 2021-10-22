@@ -123,11 +123,16 @@ int save_totalclock;
 BOOL GamePaused = FALSE;
 BOOL NetBroadcastMode = TRUE;
 BOOL NetModeOverride = FALSE;
+#ifdef __AMIGA__
+static BYTE bbuf[ sizeof(packbuf) + sizeof(PACKET_PROXY) ];
+#endif
 
 
 void netsendpacket(int ind, BYTEp buf, int len)
 {
+#ifndef __AMIGA__
 	BYTE bbuf[ sizeof(packbuf) + sizeof(PACKET_PROXY) ];
+#endif
 	PACKET_PROXYp prx = (PACKET_PROXYp)bbuf;
 	int i;
 
@@ -153,7 +158,9 @@ void netsendpacket(int ind, BYTEp buf, int len)
 void netbroadcastpacket(BYTEp buf, int len)
 {
 	int i;
+#ifndef __AMIGA__
 	BYTE bbuf[ sizeof(packbuf) + sizeof(PACKET_PROXY) ];
+#endif
 	PACKET_PROXYp prx = (PACKET_PROXYp)bbuf;
 
 	// broadcast via master if in M/S mode and we are not the master

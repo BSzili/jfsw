@@ -211,19 +211,27 @@ int SaveGame(short save_num)
     MFILE fil;
     int i,j;
     short ndx;
+#ifndef __AMIGA__
     SPRITE tsp;
+#endif
     SPRITEp sp;
+#ifndef __AMIGA__
     PLAYER tp;
+#endif
     PLAYERp pp;
     SECT_USERp sectu;
+#ifndef __AMIGA__
     USER tu;
+#endif
     USERp u;
     ANIM tanim;
     ANIMp a;
     CHAR code;
     BYTE data_code;
     SHORT data_ndx;
+#ifndef __AMIGA__
     PANEL_SPRITE tpanel_sprite;
+#endif
     PANEL_SPRITEp psp,cur,next;
     SECTOR_OBJECTp sop;
     char game_name[80];
@@ -255,10 +263,19 @@ int SaveGame(short save_num)
     MWRITE(connectpoint2,sizeof(connectpoint2),1,fil);
 
     //save players info
+#ifdef __AMIGA__
+    pp = CallocMem(sizeof(PLAYER), 1);
+    ASSERT(pp);
+#else
     pp = &tp;
+#endif
     for (i = 0; i < numplayers; i++)
         {
+#ifdef __AMIGA__
+        memcpy(pp, &Player[i], sizeof(PLAYER));
+#else
         memcpy(&tp, &Player[i], sizeof(PLAYER));
+#endif
 
         // this does not point to global data - this is allocated link list based
         // save this inside the structure
@@ -278,7 +295,11 @@ int SaveGame(short save_num)
             pp->MiniBarAmmoDigit[ndx] = (PANEL_SPRITEp)(intptr_t)PanelSpriteToNdx(&Player[i], pp->MiniBarAmmoDigit[ndx]);
         #endif
 
+#ifdef __AMIGA__
+        MWRITE(pp, sizeof(PLAYER),1,fil);
+#else
         MWRITE(&tp, sizeof(PLAYER),1,fil);
+#endif
 
         //////
 
@@ -300,10 +321,19 @@ int SaveGame(short save_num)
         saveisshot |= SaveSymDataInfo(fil, pp->sop_control);
         saveisshot |= SaveSymDataInfo(fil, pp->sop_riding);
         }
+#ifdef __AMIGA__
+    FreeMem(pp);
+    pp = NULL;
+#endif
 
     #if PANEL_SAVE
     // local copy
+#ifdef __AMIGA__
+    psp = CallocMem(sizeof(PANEL_SPRITE), 1);
+    ASSERT(psp);
+#else
     psp = &tpanel_sprite;
+#endif
     for (i = 0; i < numplayers; i++)
         {
         unsigned j;
@@ -341,6 +371,10 @@ int SaveGame(short save_num)
         ndx = -1;
         MWRITE(&ndx, sizeof(ndx),1,fil);
         }
+#ifdef __AMIGA__
+    FreeMem(psp);
+    psp = NULL;
+#endif
     #endif
 
     MWRITE(&numsectors,sizeof(numsectors),1,fil);
@@ -389,6 +423,10 @@ int SaveGame(short save_num)
     MWRITE(nextspritestat,sizeof(nextspritestat),1,fil);
 
     //User information
+#ifdef __AMIGA__
+    u = CallocMem(sizeof(USER), 1);
+    ASSERT(u);
+#endif
     for (i = 0; i < MAXSPRITES; i++)
         {
         ndx = i;
@@ -398,8 +436,12 @@ int SaveGame(short save_num)
             MWRITE(&ndx,sizeof(ndx),1,fil);
 
             sp = &sprite[i];
+#ifdef __AMIGA__
+            memcpy(u, User[i], sizeof(USER));
+#else
             memcpy(&tu, User[i], sizeof(USER));
             u = &tu;
+#endif
 
             MWRITE(u,sizeof(USER),1,fil);
 
@@ -439,6 +481,10 @@ int SaveGame(short save_num)
         }
     ndx = -1;
     MWRITE(&ndx,sizeof(ndx),1,fil);
+#ifdef __AMIGA__
+    FreeMem(u);
+    u = NULL;
+#endif
 
     //
     // Sector object
@@ -750,7 +796,9 @@ int LoadGame(short save_num)
     BYTE data_code;
     SHORT data_ndx;
     PANEL_SPRITEp psp,next,cur;
+#ifndef __AMIGA__
     PANEL_SPRITE tpanel_sprite;
+#endif
     char game_name[80];
     OrgTileP otp, next_otp;
 
@@ -1155,7 +1203,20 @@ int LoadGame(short save_num)
     BOOL FxBak = gs.FxOn;
     short SndVolBak = gs.SoundVolume;
     short MusVolBak = gs.MusicVolume;
+#ifdef __AMIGA__
+    // TODO send upstream?
+    char *OggTrackBak = CallocMem(MAXOGGTRACKLENGTH, 1);
+    if (OggTrackBak) {
+        strcpy(OggTrackBak, gs.OggTrackName);
+    }
+#endif
     MREAD(&gs,sizeof(gs),1,fil);
+#ifdef __AMIGA__
+    if (OggTrackBak) {
+        strcpy(gs.OggTrackName, OggTrackBak);
+        FreeMem(OggTrackBak);
+    }
+#endif
     gs.MusicOn = MusicBak;
     gs.FxOn = FxBak;
     gs.Ambient = AmbBak;

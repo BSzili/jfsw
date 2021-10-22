@@ -580,6 +580,24 @@ PauseSong(BOOL pauseon)
 void
 SetSongVolume(int volume)
 {
+#ifdef __AMIGA__
+    if (!gs.MusicOn) return;
+
+    if (SongType == SongTypeVoc && SongVoice >= 0)
+        {
+        FX_SetPan(SongVoice, volume, volume, volume);
+        }
+    else
+    if (SongType == SongTypeMIDI)
+        {
+        MUSIC_SetVolume(volume);
+        }
+    else
+    if (SongType == SongTypeCDA)
+        {
+        CD_SetVolume(volume);
+        }
+#endif
 }
 
 BOOL
@@ -1292,6 +1310,7 @@ SoundShutdown(void)
 
 void loadtmb(void)
 {
+#ifndef __AMIGA__
     unsigned char tmb[8000];
     int fil, l;
 
@@ -1303,6 +1322,7 @@ void loadtmb(void)
     kread(fil,tmb,l);
     MUSIC_RegisterTimbreBank(tmb);
     kclose(fil);
+#endif
 }
 
 void MusicStartup( void )
@@ -1787,6 +1807,9 @@ DoUpdateSounds3D(void)
     short dist, angle;
     BOOL deletesound = FALSE;
 
+#ifdef __AMIGA__
+    static
+#endif
     TVOC_INFO TmpVocArray[32];
     int i;
     static BOOL MoveSkip8 = 0;

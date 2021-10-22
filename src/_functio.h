@@ -335,16 +335,27 @@ static char * joystickdefaults_modern[MAXJOYBUTTONS] =
    "Jump",        // A
    "Crouch",      // B
    "Open",        // X
+#ifdef __AMIGA__
+   "Inventory",   // Y
+#else
    "",            // Y
+#endif
    "Map",         // Back
    "",            // Guide
    "Show_Menu",   // Start
    "",            // L thumb
    "",            // R thumb
+#ifdef __AMIGA__
+   "Jump",        // L shoulder
+   "Fire",        // R shoulder
+   "Previous_Weapon", // DP up
+   "Next_Weapon",     // DP down
+#else
    "Previous_Weapon", // L shoulder
    "Next_Weapon", // R shoulder
    "Inventory",   // DP up
    "Med_Kit",     // DP down
+#endif
    "Inventory_Left", // DP left
    "Inventory_Right", // DP right
    "",
@@ -494,7 +505,11 @@ static char * joystickdigitaldefaults_modern[MAXJOYAXES*2] =
    "",
    "",
    "",
+#ifdef __AMIGA__
+   "Crouch",
+#else
    "",
+#endif
    "",
    "Fire",
    "",

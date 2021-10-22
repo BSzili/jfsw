@@ -288,8 +288,12 @@ playanm(short anim_num)
     unsigned char *animbuf, *palptr;
     int i, j, k, length = 0, numframes = 0;
     int32 handle = -1;
+#ifdef __AMIGA__
+    unsigned char *ANIMvesapal, *tempbuf;
+#else
     unsigned char ANIMvesapal[4*256];
     unsigned char tempbuf[256];
+#endif
     unsigned char *palook_bak = palookup[0];
     UserInput uinfo = { FALSE, FALSE, dir_None };
 
@@ -307,6 +311,13 @@ playanm(short anim_num)
     animbuf = LoadAnm(anim_num);
     if (!animbuf)
         return;
+
+#ifdef __AMIGA__
+    tempbuf = malloc(256 + 768);
+    if (!tempbuf)
+        return;
+    ANIMvesapal = tempbuf + 256;
+#endif
 
     DSPRINTF(ds,"PlayAnm - Palette Stuff");
     MONO_PRINT(ds);
@@ -409,4 +420,7 @@ ENDOFANIMLOOP:
     KB_ClearKeysDown();
     ANIM_FreeAnim();
     walock[ANIM_TILE(ANIMnum)] = 1;
+#ifdef __AMIGA__
+    free(tempbuf);
+#endif
     }

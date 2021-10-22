@@ -1573,9 +1573,18 @@ VOID PreMapCombineFloors(VOID)
     int base_offset;
     PLAYERp pp = &Player[myconnectindex];
     int dx,dy;
+#ifdef __AMIGA__
+    short *sectlist;
+#else
     short sectlist[MAXSECTORS];
+#endif
     short sectlistplc, sectlistend, dasect, startwall, endwall, nextsector;
     short pnum;
+
+#ifdef __AMIGA__
+    sectlist = malloc(MAXSECTORS * sizeof(short));
+    ASSERT(sectlist);
+#endif
 
     typedef struct
         {
@@ -1671,6 +1680,9 @@ VOID PreMapCombineFloors(VOID)
         {
         KillSprite(SpriteNum);
         }
+#ifdef __AMIGA__
+    free(sectlist);
+#endif
     }
 
 #if 0

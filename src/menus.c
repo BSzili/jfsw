@@ -432,7 +432,9 @@ MenuItem inputsetup_i[] =
     {DefLayer(0, "Mouse Buttons Setup", &mousesetupgroup),OPT_XS,      OPT_LINE(3),1,m_defshade,0,NULL,NULL,NULL},
     {DefLayer(0, "Mouse Axes Setup", &mouseaxesgroup),OPT_XS,          OPT_LINE(4),1,m_defshade,0,NULL,NULL,NULL},
     {DefLayer(0, "Controller Buttons Setup", &joybuttonssetupgroup),OPT_XS,OPT_LINE(6),1,m_defshade,0,NULL,MNU_JoystickCheck,MNU_JoystickButtonsInitialise},
-#ifndef __AMIGA__
+#ifdef __AMIGA__
+    {DefLayer(0, "Joystick Axes Setup", &joyaxessetupgroup), OPT_XS,   OPT_LINE(7),1,m_defshade,0,NULL,MNU_JoystickAxesCheck,MNU_JoystickAxesInitialise},
+#else
     {DefLayer(0, "Joystick Axes Setup", &joyaxessetupgroup), OPT_XS,   OPT_LINE(7),1,m_defshade,0,NULL,MNU_JoystickCheck,MNU_JoystickAxesInitialise},
 #endif
     {DefOption(0, "Apply Modern Defaults"), OPT_XS,                    OPT_LINE(9),1,m_defshade,0,MNU_LoadModernDefaults,NULL,NULL},
@@ -3282,6 +3284,23 @@ MNU_JoystickCheck(MenuItem *item)
     return (TRUE);
     }
 
+#ifdef __AMIGA__
+BOOL
+MNU_JoystickAxesCheck(MenuItem *item)
+    {
+    if (joynumaxes < 1)
+        {
+        SET(item->flags, mf_disabled);
+        }
+    else
+        {
+        RESET(item->flags, mf_disabled);
+        }
+
+    return (TRUE);
+    }
+#endif
+
 // This is only called when Enter is pressed
 static BOOL
 MNU_TryMusicInit(void)
@@ -5004,7 +5023,13 @@ FadeIn(unsigned char startcolor, unsigned int clicks)
     {
     int i, palreg, usereg, tmpreg1 = 0, tmpreg2 = 0;
     RGB_color color;
+#ifdef __AMIGA__
+    unsigned char *temp_pal, *palette;
+    temp_pal = malloc(768);
+    if (!temp_pal) return;
+#else
     unsigned char temp_pal[768], *palette;
+#endif
 
 #if USE_POLYMOST && USE_OPENGL
     if (getrendermode() >= 3) return;
@@ -5059,6 +5084,9 @@ FadeIn(unsigned char startcolor, unsigned int clicks)
         // Delay clicks
         Fade_Timer(clicks);
         }
+#ifdef __AMIGA__
+    free(temp_pal);
+#endif
     }
 
 void
@@ -5066,7 +5094,13 @@ FadeOut(unsigned char targetcolor, unsigned int clicks)
     {
     int i, palreg, usereg = 0, tmpreg1 = 0, tmpreg2 = 0;
     RGB_color color;
+#ifdef __AMIGA__
+    unsigned char *temp_pal;
+    temp_pal = malloc(768);
+    if (!temp_pal) return;
+#else
     unsigned char temp_pal[768];
+#endif
 
 #if USE_POLYMOST && USE_OPENGL
     if (getrendermode() >= 3) return;
@@ -5138,6 +5172,9 @@ FadeOut(unsigned char targetcolor, unsigned int clicks)
         // Delay clicks
         Fade_Timer(clicks);
         }
+#ifdef __AMIGA__
+    free(temp_pal);
+#endif
     }
 
 //////////////////////////////////////////////////////////////////////////////

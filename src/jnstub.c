@@ -715,6 +715,7 @@ ExtInit(void)
             }
         }
 
+#ifndef __AMIGA__
         // default behaviour is to write to the user profile directory, but
         // creating a 'user_profiles_disabled' file in the current working
         // directory where the game was launched makes the installation
@@ -750,6 +751,7 @@ ExtInit(void)
                 free(supportdir);
             }
         }
+#endif
 
         {
             char *newgrp;

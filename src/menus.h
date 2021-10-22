@@ -305,6 +305,9 @@ BOOL MNU_FxCheck(MenuItem_p item);
 BOOL MNU_TexFilterCheck(MenuItem_p item);
 BOOL MNU_MouseCheck(MenuItem_p item);
 BOOL MNU_JoystickCheck(MenuItem_p item);
+#ifdef __AMIGA__
+BOOL MNU_JoystickAxesCheck(MenuItem *item);
+#endif
 BOOL MNU_BorderCheck(MenuItem_p item);
 BOOL MNU_ShareWareCheck(MenuItem_p item);
 BOOL MNU_MenuLevelCheck(MenuItem_p item);

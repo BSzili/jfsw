@@ -96,7 +96,14 @@ static unsigned int ChecksumFile(int fh, struct importgroupsmeta *cbs)
 {
     int b;
     unsigned int crc;
+#ifdef __AMIGA__
+    unsigned char *buf = malloc(16384);
+    if (!buf) {
+        return 0;
+    }
+#else
     unsigned char buf[16384];
+#endif
 
     crc32init(&crc);
     lseek(fh, 0, SEEK_SET);
@@ -106,6 +113,10 @@ static unsigned int ChecksumFile(int fh, struct importgroupsmeta *cbs)
         if (b > 0) crc32block(&crc, buf, b);
     } while (b == sizeof(buf));
     crc32finish(&crc);
+
+#ifdef __AMIGA__
+    free(buf);
+#endif
 
     return crc;
 }
@@ -251,10 +262,21 @@ enum {
 static int CopyFile(int fh, int size, const char *fname, struct importgroupsmeta *cbs)
 {
     int ofh, b=0, rv = COPYFILE_OK;
+
+#ifdef __AMIGA__
+    char *buf = malloc(16384);
+    if (!buf) {
+        return COPYFILE_ERR_RW;
+    }
+#else
     char buf[16384];
+#endif
 
     ofh = open(fname, O_WRONLY|O_BINARY|O_CREAT|O_EXCL, BS_IREAD|BS_IWRITE);
     if (ofh < 0) {
+#ifdef __AMIGA__
+        free(buf);
+#endif
         if (errno == EEXIST) return COPYFILE_ERR_EXISTS;
         return COPYFILE_ERR_OPEN;
     }
@@ -271,6 +293,9 @@ static int CopyFile(int fh, int size, const char *fname, struct importgroupsmeta
     close(ofh);
     if (size != lseek(fh, 0, SEEK_CUR)) rv = COPYFILE_ERR_RW;  // File not the expected length.
     if (rv != COPYFILE_OK) remove(fname);
+#ifdef __AMIGA__
+    free(buf);
+#endif
     return rv;
 }
 

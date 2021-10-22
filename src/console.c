@@ -210,7 +210,11 @@ BYTE CON_CommandCmp(const char *str1, const char *str2, int len)
 BOOL IsCommand(char *str)
     {
     int i;
+#ifdef __AMIGA__
+    char first[256];
+#else
     char first[512];
+#endif
 
     sscanf(str,"%s",first);
 

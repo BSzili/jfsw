@@ -3305,11 +3305,13 @@ MNU_JoystickAxesCheck(MenuItem *item)
 static BOOL
 MNU_TryMusicInit(void)
     {
+#ifndef __AMIGA__
     if (PlaySong(0, RedBookSong[Level], TRUE, FALSE))
         {
         if (currentmenu->cursor == 0)
             MNU_MusicCheck(&currentmenu->items[currentmenu->cursor+1]);
         }
+#endif
 
     return (TRUE);
     }

@@ -70,7 +70,9 @@ BOOL WeaponOK(PLAYERp pp);
 #define NUMOFFIRSTTIMEACTIVE 100  // You can save up to 100 strings in the message history queue
 
 char pus, pub;  // Global text vars
+#ifndef __AMIGA__
 char fta_quotes[NUMOFFIRSTTIMEACTIVE][64];
+#endif
 
 
 int gametext(int x,int y,char *t,char s,short dabits)

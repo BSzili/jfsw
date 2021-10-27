@@ -7795,7 +7795,7 @@ VOID TraverseBreakableWalls(short start_sect, int x, int y, int z, short ang, in
     int WallBreakPosition(short hitwall, short *sectnum, int *x, int *y, int *z, short *ang);
     int i, j, k;
 #ifdef __AMIGA__
-    static
+    extern
 #endif
     short sectlist[MAXSECTORS]; // !JIM! Frank, 512 was not big enough for $dozer, was asserting out!
     short sectlistplc, sectlistend, sect, startwall, endwall, nextsector;

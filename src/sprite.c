@@ -1562,6 +1562,9 @@ IconDefault(short SpriteNum)
     DoActorZrange(SpriteNum);
     }
 
+#ifdef __AMIGA__
+short sectlist[MAXSECTORS];
+#endif
 VOID PreMapCombineFloors(VOID)
     {
     #define MAX_FLOORS 32
@@ -1573,18 +1576,11 @@ VOID PreMapCombineFloors(VOID)
     int base_offset;
     PLAYERp pp = &Player[myconnectindex];
     int dx,dy;
-#ifdef __AMIGA__
-    short *sectlist;
-#else
+#ifndef __AMIGA__
     short sectlist[MAXSECTORS];
 #endif
     short sectlistplc, sectlistend, dasect, startwall, endwall, nextsector;
     short pnum;
-
-#ifdef __AMIGA__
-    sectlist = malloc(MAXSECTORS * sizeof(short));
-    ASSERT(sectlist);
-#endif
 
     typedef struct
         {
@@ -1680,9 +1676,6 @@ VOID PreMapCombineFloors(VOID)
         {
         KillSprite(SpriteNum);
         }
-#ifdef __AMIGA__
-    free(sectlist);
-#endif
     }
 
 #if 0

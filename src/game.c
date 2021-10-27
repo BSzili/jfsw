@@ -1068,7 +1068,9 @@ InitGame(VOID)
     if (!SW_SHAREWARE)
     LoadCustomInfoFromScript( "swcustom.txt" ); // Load user customisation information
 
+#ifndef __AMIGA__
     if (!loaddefinitionsfile(deffile)) buildputs("Definitions file loaded.\n");
+#endif
 
     DemoModeMenuInit = TRUE;
     // precache as much stuff as you can

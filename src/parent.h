@@ -30,7 +30,9 @@ Prepared for public release: 03/28/2005 - Charlie Wiederhold, 3D Realms
 #define INVISTILE 6145
 
 typedef struct TILE_INFO_TYPE {
+#ifndef __AMIGA__
     short Voxel;    // Voxel Number to replace sprites with
+#endif
     short Parental; // Tile offset to replace adult tiles with when locked out
                     // 0 = Invisible
 } ParentalStruct;

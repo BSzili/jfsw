@@ -62,7 +62,11 @@ FILE *DemoSyncFile;
 BOOL DemoSyncTest = FALSE, DemoSyncRecord = FALSE;
 char DemoTmpName[16] = "";
 
+#ifdef __AMIGA__
+SW_PACKET *DemoBuffer;
+#else
 SW_PACKET DemoBuffer[DEMO_BUFFER_MAX];
+#endif
 int DemoRecCnt = 0;                    // Can only record 1-player game
 
 BOOL DemoDone;
@@ -114,6 +118,13 @@ char *DemoSyncFileName(VOID)
 VOID
 DemoSetup(VOID)
     {
+#ifdef __AMIGA__
+    if (DemoBuffer == NULL)
+        {
+        DemoBuffer = AllocMem(sizeof(SW_PACKET) * DEMO_BUFFER_MAX);
+        PRODUCTION_ASSERT(DemoBuffer);
+        }
+#endif
     if (DemoRecording)
         {
         if (DemoSyncRecord)
@@ -139,6 +150,13 @@ DemoSetup(VOID)
 VOID
 DemoRecordSetup(VOID)
     {
+#ifdef __AMIGA__
+    if (DemoBuffer == NULL)
+        {
+        DemoBuffer = AllocMem(sizeof(SW_PACKET) * DEMO_BUFFER_MAX);
+        PRODUCTION_ASSERT(DemoBuffer);
+        }
+#endif
     if (DemoRecording)
         {
         if (DemoSyncRecord)
@@ -152,6 +170,13 @@ DemoRecordSetup(VOID)
 VOID
 DemoPlaySetup(VOID)
     {
+#ifdef __AMIGA__
+    if (DemoBuffer == NULL)
+        {
+        DemoBuffer = AllocMem(sizeof(SW_PACKET) * DEMO_BUFFER_MAX);
+        PRODUCTION_ASSERT(DemoBuffer);
+        }
+#endif
     if (DemoPlaying)
         {
         if (DemoSyncRecord)
@@ -371,6 +396,13 @@ DemoTerm(VOID)
         fclose(DemoSyncFile);
         DemoSyncFile = NULL;
         }
+#ifdef __AMIGA__
+    if (DemoBuffer)
+        {
+        FreeMem(DemoBuffer);
+        DemoBuffer = NULL;
+        }
+#endif
     }
 
 ///////////////////////////////////////////

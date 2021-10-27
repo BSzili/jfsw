@@ -43,7 +43,11 @@ extern BOOL DemoInitOnce;
 extern short DemoDebugBufferMax;
 
 #define DEMO_BUFFER_MAX 2048
+#ifdef __AMIGA__
+extern SW_PACKET *DemoBuffer;
+#else
 extern SW_PACKET DemoBuffer[DEMO_BUFFER_MAX];
+#endif
 extern int DemoRecCnt;                    // Can only record 1-player game
 
 #define DEMO_FILE_GROUP 0

@@ -97,13 +97,33 @@ static unsigned int ChecksumFile(int fh, struct importgroupsmeta *cbs)
     int b;
     unsigned int crc;
 #ifdef __AMIGA__
-    unsigned char *buf = malloc(16384);
+    const int bufsize = 65536;
+    unsigned char *buf;
+    int totalSize;
+    int checkedSize = 0;
+
+    buf = malloc(bufsize);
     if (!buf) {
         return 0;
     }
+
+    crc32init(&crc);
+    totalSize = lseek(fh, 0, SEEK_END);
+    lseek(fh, 0, SEEK_SET);
+    do {
+        if (cbs && cbs->cancelled(cbs->data)) return 0;
+        b = read(fh, buf, bufsize);
+        if (b > 0) crc32block(&crc, buf, b);
+        checkedSize += b;
+        const int checkedKB = checkedSize / 1024;
+        const int totalKB = totalSize / 1024;
+        buildprintf("\r(%d/%d KB %d%%)", checkedKB, totalKB, checkedKB * 100 / totalKB);
+    } while (b == bufsize);
+    buildputs("\n");
+    crc32finish(&crc);
+    free(buf);
 #else
     unsigned char buf[16384];
-#endif
 
     crc32init(&crc);
     lseek(fh, 0, SEEK_SET);
@@ -113,9 +133,6 @@ static unsigned int ChecksumFile(int fh, struct importgroupsmeta *cbs)
         if (b > 0) crc32block(&crc, buf, b);
     } while (b == sizeof(buf));
     crc32finish(&crc);
-
-#ifdef __AMIGA__
-    free(buf);
 #endif
 
     return crc;

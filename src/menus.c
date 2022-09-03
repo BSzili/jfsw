@@ -433,9 +433,9 @@ MenuItem inputsetup_i[] =
     {DefLayer(0, "Mouse Axes Setup", &mouseaxesgroup),OPT_XS,          OPT_LINE(4),1,m_defshade,0,NULL,NULL,NULL},
     {DefLayer(0, "Controller Buttons Setup", &joybuttonssetupgroup),OPT_XS,OPT_LINE(6),1,m_defshade,0,NULL,MNU_JoystickCheck,MNU_JoystickButtonsInitialise},
 #ifdef __AMIGA__
-    {DefLayer(0, "Joystick Axes Setup", &joyaxessetupgroup), OPT_XS,   OPT_LINE(7),1,m_defshade,0,NULL,MNU_JoystickAxesCheck,MNU_JoystickAxesInitialise},
+    {DefLayer(0, "Controller Axes Setup", &joyaxessetupgroup), OPT_XS,   OPT_LINE(7),1,m_defshade,0,NULL,MNU_JoystickAxesCheck,MNU_JoystickAxesInitialise},
 #else
-    {DefLayer(0, "Joystick Axes Setup", &joyaxessetupgroup), OPT_XS,   OPT_LINE(7),1,m_defshade,0,NULL,MNU_JoystickCheck,MNU_JoystickAxesInitialise},
+    {DefLayer(0, "Controller Axes Setup", &joyaxessetupgroup), OPT_XS,   OPT_LINE(7),1,m_defshade,0,NULL,MNU_JoystickCheck,MNU_JoystickAxesInitialise},
 #endif
     {DefOption(0, "Apply Modern Defaults"), OPT_XS,                    OPT_LINE(9),1,m_defshade,0,MNU_LoadModernDefaults,NULL,NULL},
     {DefOption(0, "Apply Classic Defaults"), OPT_XS,                   OPT_LINE(10),1,m_defshade,0,MNU_LoadClassicDefaults,NULL,NULL},
@@ -2947,8 +2947,8 @@ MNU_LoadSaveMove(UserCall UNUSED(call), MenuItem_p UNUSED(item))
 
             if (KB_KeyPressed(sc_Y) || KB_KeyPressed(sc_Enter) || mnu_input.button0)
                 {
-		KB_ClearKeyDown(sc_Y);
-		KB_ClearKeyDown(sc_Enter);
+                KB_ClearKeyDown(sc_Y);
+                KB_ClearKeyDown(sc_Enter);
                 SavePrompt = FALSE;
                 // use input
                 item->custom();
@@ -2956,7 +2956,7 @@ MNU_LoadSaveMove(UserCall UNUSED(call), MenuItem_p UNUSED(item))
             else
             if (KB_KeyPressed(sc_N) || mnu_input.button1)
                 {
-		KB_ClearKeyDown(sc_N);
+                KB_ClearKeyDown(sc_N);
                 strcpy(SaveGameDescr[game_num], BackupSaveGameDescr);
                 SavePrompt = FALSE;
                 MenuInputMode = FALSE;
@@ -2982,7 +2982,7 @@ MNU_LoadSaveMove(UserCall UNUSED(call), MenuItem_p UNUSED(item))
                 {
                 GotInput = TRUE;
                 }
-	    KB_ClearKeyDown(sc_Enter);
+            KB_ClearKeyDown(sc_Enter);
             break;
         case TRUE:                      // Got input
             break;
@@ -3028,7 +3028,7 @@ MNU_LoadSaveDraw(UserCall call, MenuItem_p UNUSED(item))
             char tmp[sizeof(SaveGameDescr[0])+1];
 
             //cur_show ^= 1;
-	    cur_show = (totalclock & 32);
+            cur_show = (totalclock & 32);
             if (cur_show)
                 {
                 // add a cursor to the end

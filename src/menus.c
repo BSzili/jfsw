@@ -1757,11 +1757,11 @@ MNU_OrderCustom(UserCall call, MenuItem * item)
         on_screen = 0;
 // CTW MODIFICATION END
 
-	flushperms();
+    flushperms();
     rotatesprite(0,0,RS_SCALE,0,OrderScreen[on_screen],0,0,
         (ROTATE_SPRITE_CORNER|ROTATE_SPRITE_SCREEN_CLIP|ROTATE_SPRITE_NON_MASK|ROTATE_SPRITE_IGNORE_START_MOST),
         0, 0, xdim-1, ydim-1);
-	SetRedrawScreen(&Player[myconnectindex]);
+    SetRedrawScreen(&Player[myconnectindex]);
 
     if (on_screen == OrderScreenSiz-1)
         {
@@ -2590,8 +2590,8 @@ MNU_InputSmallString(char *name, short pix_width)
                 h = strlen(name);
                 name[h] = ch;
                 name[h + 1] = 0;
+                }
             }
-        }
         }
 
     return (TRUE);
@@ -2702,8 +2702,8 @@ MNU_InputString(char *name, short pix_width)
                 h = strlen(name);
                 name[h] = ch;
                 name[h + 1] = 0;
+                }
             }
-        }
         }
 
     if (!didinput)

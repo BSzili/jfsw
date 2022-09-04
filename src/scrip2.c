@@ -297,7 +297,6 @@ void LoadKVXFromScript( char *filename )
 
     // zero out the array memory with -1's for pics not being voxelized
     memset(&aVoxelArray[0],-1,sizeof(struct TILE_INFO_TYPE)*MAXTILES);
-#ifndef __AMIGA__
     for(grabbed = 0; grabbed < MAXTILES; grabbed++)
     {
         aVoxelArray[grabbed].Voxel = -1;
@@ -339,7 +338,6 @@ void LoadKVXFromScript( char *filename )
     } while (script_p < scriptend_p);
 
         FreeMem(scriptbuffer);
-#endif
     FreeMem(sName);
     script_p = NULL;
 }

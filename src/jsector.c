@@ -1087,8 +1087,10 @@ JAnalyzeSprites(SPRITEp tspr)
     if (getrendermode() == 3 && md_tilehasmodel(tspr->picnum) >= 0 && usemodels) return;
 #endif
 
-#ifndef __AMIGA__
     // Check for voxels
+#ifdef __AMIGA__
+    if (offscreenrendering) return; // No voxels when drawing to tiles
+#endif
     //if (bVoxelsOn)
     if (gs.Voxels)
         {
@@ -1100,7 +1102,6 @@ JAnalyzeSprites(SPRITEp tspr)
             }
         }
     else
-#endif
         {
         switch (tspr->picnum)
             {

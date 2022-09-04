@@ -468,9 +468,7 @@ MenuItem options_i[] =
     {DefButton(btn_auto_run, 0, "Auto Run"), OPT_XS,             OPT_LINE(7), 1, m_defshade, 0, NULL, NULL, NULL},
     {DefButton(btn_crosshair, 0, "Crosshair"), OPT_XS,           OPT_LINE(8), 1, m_defshade, 0, NULL, NULL, NULL},
     {DefButton(btn_auto_aim, 0, "Auto-Aiming"), OPT_XS,          OPT_LINE(9), 1, m_defshade, 0, NULL, NULL, NULL},
-#ifndef __AMIGA__
     {DefButton(btn_voxels, 0, "Voxel Sprites"), OPT_XS,          OPT_LINE(10), 1, m_defshade, 0, NULL, NULL, NULL},
-#endif
     {DefButton(btn_stats, 0, "Level Stats"), OPT_XS,             OPT_LINE(11), 1, m_defshade, 0, NULL, MNU_StatCheck, NULL},
     {DefNone}
     };

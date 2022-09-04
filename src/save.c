@@ -1171,6 +1171,7 @@ int LoadGame(short save_num)
     short MusVolBak = gs.MusicVolume;
 #ifdef __AMIGA__
     // TODO send upstream?
+    BOOL FlipStereoBak = gs.FlipStereo;
     char *OggTrackBak = CallocMem(MAXOGGTRACKLENGTH, 1);
     if (OggTrackBak) {
         strcpy(OggTrackBak, gs.OggTrackName);
@@ -1178,6 +1179,7 @@ int LoadGame(short save_num)
 #endif
     MREAD(&gs,sizeof(gs),1,fil);
 #ifdef __AMIGA__
+    gs.FlipStereo = FlipStereoBak;
     if (OggTrackBak) {
         strcpy(gs.OggTrackName, OggTrackBak);
         FreeMem(OggTrackBak);

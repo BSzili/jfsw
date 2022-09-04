@@ -637,6 +637,26 @@ StopSound(VOID)
 
 #define MAXLEVLDIST 19000   // The higher the number, the further away you can hear sound
 
+#ifdef __AMIGA__
+// https://en.wikipedia.org/wiki/Methods_of_computing_square_roots#Approximations_that_depend_on_the_floating_point_representation
+static inline float Q_sqrt(float x)
+{
+    union
+    {
+        float f;
+        unsigned int i;
+    } t;
+
+    t.f = x;
+    t.i -= 1 << 23;
+    t.i >>= 1;
+    t.i += 1 << 29;
+
+    return t.f;
+}
+#define sqrt Q_sqrt
+#endif
+
 short
 SoundDist(int x, int y, int z, int basedist)
     {
